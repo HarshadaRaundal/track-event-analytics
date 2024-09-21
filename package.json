@@ -1,0 +1,32 @@
+{
+  "name": "track-event-analytics",
+  "version": "1.0.0",
+  "description": "event management package",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HarshadaRaundal/track-event-analytics.git"
+  },
+  "keywords": [
+    "npm"
+  ],
+  "author": "harshadaraundal",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/HarshadaRaundal/track-event-analytics/issues"
+  },
+  "homepage": "https://github.com/HarshadaRaundal/track-event-analytics#readme",
+  "dependencies": {
+    "react-device-detect": "^2.2.3",
+    "ts-node": "^10.9.2",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.8",
+    "@types/react-dom": "^18.3.0",
+    "@types/uuid": "^10.0.0"
+  }
+}
