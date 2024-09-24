@@ -7,14 +7,15 @@ import { addMinutesToEpoch } from "./helper";
 import { readCookie } from "./data";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCpBpnPd0CrE9UpgnyY4DZsZiQZomRJTx4",
-  authDomain: "indigg-website-staging.firebaseapp.com",
-  projectId: "indigg-website-staging",
-  storageBucket: "indigg-website-staging.appspot.com",
-  messagingSenderId: "115613134409",
-  appId: "1:115613134409:web:ddacf6eb35ccdf74f89998",
-  measurementId: "G-CSXM02V8S6",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "",
 };
+
 export const firebaseAnalytics = (
   eventName: string,
   analyticsObject: AnalyticEventData
@@ -40,7 +41,7 @@ export const plateformAnalytics = async (
   eventName: string,
   analyticsObject: AnalyticEventData
 ) => {
-  const baseURL = "https://m8vkl3e1b4.execute-api.eu-west-1.amazonaws.com/dev";
+  const baseURL = process.env.BASE_URL_TRACKER;
   const gameAccountId = process.env.GAME_ACCOUNT_ID;
   const platformGameId = process.env.GAME_ID;
   const isStaging = process.env.ENVIRONMENT === "Staging";
@@ -51,7 +52,7 @@ export const plateformAnalytics = async (
   const { ANALYTIC_SESSION_START, LOGIN_SUCCESSFUL } =
     ANALYTICS_EVENTS.SESSION_EVENTS;
   const { CCP_MODAL_DATA } = STORAGE_KEYS;
-  const CCPModalData = getLocalStorageItem(CCP_MODAL_DATA) || "oiuyt";
+  const CCPModalData = getLocalStorageItem(CCP_MODAL_DATA) || "null";
   const parsedCCPModalData = CCPModalData && JSON.parse(CCPModalData);
   const accessToken = await readCookie("accessToken");
 

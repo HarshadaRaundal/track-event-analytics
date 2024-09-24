@@ -1,5 +1,4 @@
 "use strict";
-// utils.ts
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -49,14 +48,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetInactivityTimer = exports.filteredAttributes = exports.startNewAnalyticSession = exports.gamerPlateformAnalytics = exports.plateformAnalytics = exports.firebaseAnalytics = exports.getCurrentPlatform = exports.PLATFORMS = exports.isSessionEndTrigger = exports.inactivityTimer = exports.addMinutesToEpoch = exports.triggerSessionEndEvent = exports.isSessionEnd = exports.setLocalStorage = exports.baseURL = exports.isStaging = exports.getLocalStorageItem = exports.sessionId = exports.ipAddressRef = exports.userRefId = exports.loginId = exports.isDesktop = exports.setDeviceInfo = exports.deviceInfoRef = void 0;
+// utils.ts
+// import "dotenv/config";
 var react_device_detect_1 = require("react-device-detect");
 var eventIds_1 = require("./eventIds");
 var const_1 = require("../constant/const");
 var data_1 = require("./data");
 var analytics_1 = require("firebase/analytics");
 var app_1 = require("firebase/app");
-// import { firebaseAnalytics } from "./firebaseAnalytics";
-var ACCESS_TOKEN = const_1.STORAGE_KEYS.ACCESS_TOKEN, REFRESH_TOKEN = const_1.STORAGE_KEYS.REFRESH_TOKEN, CAMPAIGN_TASK = const_1.STORAGE_KEYS.CAMPAIGN_TASK, CURRENT_CAMPAIGN_TASK_TYPE = const_1.STORAGE_KEYS.CURRENT_CAMPAIGN_TASK_TYPE, SOCIAL_CONNECT_TASK_MODAL = const_1.STORAGE_KEYS.SOCIAL_CONNECT_TASK_MODAL, SOCIAL_FLOW = const_1.STORAGE_KEYS.SOCIAL_FLOW, SOCIAL_CONNECT_FROM = const_1.STORAGE_KEYS.SOCIAL_CONNECT_FROM, ANALYTIC_SESSION_ID = const_1.STORAGE_KEYS.ANALYTIC_SESSION_ID, DEVICE_INFO = const_1.STORAGE_KEYS.DEVICE_INFO, EVENT_TIMESTAMP = const_1.STORAGE_KEYS.EVENT_TIMESTAMP, IS_SESSION_END_TRIGGERED = const_1.STORAGE_KEYS.IS_SESSION_END_TRIGGERED, LOGIN_SESSION_ID = const_1.STORAGE_KEYS.LOGIN_SESSION_ID, USER_ID = const_1.STORAGE_KEYS.USER_ID, IP_ADDRESS = const_1.STORAGE_KEYS.IP_ADDRESS, USER_LOCATION_DATA = const_1.STORAGE_KEYS.USER_LOCATION_DATA, AIRDROP_SESSION_TABS = const_1.STORAGE_KEYS.AIRDROP_SESSION_TABS, AIRDROP_SESSION_TAB_IDENTIFIER = const_1.STORAGE_KEYS.AIRDROP_SESSION_TAB_IDENTIFIER, AUTH_INITIALIZED_FROM_URL = const_1.STORAGE_KEYS.AUTH_INITIALIZED_FROM_URL, IS_NEW_USER = const_1.STORAGE_KEYS.IS_NEW_USER, CCP_MODAL_DATA = const_1.STORAGE_KEYS.CCP_MODAL_DATA, CLAN_PAGE_FOR_REGISTRATION = const_1.STORAGE_KEYS.CLAN_PAGE_FOR_REGISTRATION;
+var ANALYTIC_SESSION_ID = const_1.STORAGE_KEYS.ANALYTIC_SESSION_ID, DEVICE_INFO = const_1.STORAGE_KEYS.DEVICE_INFO, EVENT_TIMESTAMP = const_1.STORAGE_KEYS.EVENT_TIMESTAMP, IS_SESSION_END_TRIGGERED = const_1.STORAGE_KEYS.IS_SESSION_END_TRIGGERED, LOGIN_SESSION_ID = const_1.STORAGE_KEYS.LOGIN_SESSION_ID, USER_ID = const_1.STORAGE_KEYS.USER_ID, IP_ADDRESS = const_1.STORAGE_KEYS.IP_ADDRESS, USER_LOCATION_DATA = const_1.STORAGE_KEYS.USER_LOCATION_DATA;
 exports.deviceInfoRef = {};
 var setDeviceInfo = function (data) {
     exports.deviceInfoRef = data;
@@ -134,20 +134,6 @@ var triggerSessionEndEvent = function () {
     clearTimeout(exports.inactivityTimer);
 };
 exports.triggerSessionEndEvent = triggerSessionEndEvent;
-// Utility to start a new analytic session
-// export const startNewAnalyticSession = (
-//   eventName: string,
-//   eventData: any, // Replace with a proper type if you have one
-//   isEndEventTrigger: string | null
-// ): void => {
-//   console.log(`Starting new analytic session with event: ${eventName}`);
-//   console.log("Session Data:", eventData);
-//   //   const airdrop_analyticSessionId = encodeURIComponent(uuid4());
-//   //   console.log(airdrop_analyticSessionId);
-//   //   setLocalStorage("ANALYTIC_SESSION_ID", airdrop_analyticSessionId);
-//   // Placeholder logic for starting a new session
-//   // You might want to store new session info in localStorage or another place
-// };
 var addMinutesToEpoch = function (epochTimestamp, additionTime) {
     var updatedEpochTimestamp = epochTimestamp / 1000 + additionTime * 60;
     return updatedEpochTimestamp;
@@ -174,14 +160,15 @@ var getCurrentPlatform = function () {
 };
 exports.getCurrentPlatform = getCurrentPlatform;
 var firebaseConfig = {
-    apiKey: "AIzaSyCpBpnPd0CrE9UpgnyY4DZsZiQZomRJTx4",
-    authDomain: "indigg-website-staging.firebaseapp.com",
-    projectId: "indigg-website-staging",
-    storageBucket: "indigg-website-staging.appspot.com",
-    messagingSenderId: "115613134409",
-    appId: "1:115613134409:web:ddacf6eb35ccdf74f89998",
-    measurementId: "G-CSXM02V8S6",
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "",
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "",
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "",
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "",
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "",
 };
+console.log("projectid-->2", process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID);
 var firebaseAnalytics = function (eventName, analyticsObject) {
     var eventId = exports.isStaging
         ? eventIds_1.STAGING_EVENTS_NAME[eventName]
@@ -327,15 +314,6 @@ var gamerPlateformAnalytics = function (eventName, analyticsObject) { return __a
     });
 }); };
 exports.gamerPlateformAnalytics = gamerPlateformAnalytics;
-// function generateRandomId(length = 16) {
-//   const characters =
-//     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-//   let id = "";
-//   for (let i = 0; i < length; i++) {
-//     id += characters.charAt(Math.floor(Math.random() * characters.length));
-//   }
-//   return id;
-// }
 var generateRandomId = function () {
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (char) {
         var random = (Math.random() * 16) | 0;
@@ -353,18 +331,13 @@ var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger,
     var getDeviceInfo = (0, exports.getLocalStorageItem)(DEVICE_INFO);
     var getUserLocation = (0, exports.getLocalStorageItem)(USER_LOCATION_DATA);
     var domainName = "KGeN";
-    // TODO: location data can't be read from hook,
-    // need to find another way instead of exporting
     var userLocation = locationData;
-    //   let deviceInfo: IDeviceInfo = deviceInfoRef;
     if (getDeviceInfo !== null) {
         deviceInfo = JSON.parse(getDeviceInfo);
     }
     if (getUserLocation !== null) {
         userLocation = JSON.parse(getUserLocation);
     }
-    console.log("getDeviceInfo >>>", getDeviceInfo); //For Reference
-    console.log("getUserLocation >>>", getUserLocation); //For Reference
     var countryCode = userLocation === null || userLocation === void 0 ? void 0 : userLocation.countryCode;
     var location = countryCode === "+91"
         ? "India"
@@ -412,12 +385,6 @@ var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger,
     }
 };
 exports.startNewAnalyticSession = startNewAnalyticSession;
-// Utility to filter analytics data before sending it to an analytics platform
-// export const filteredAttributes = (data: any): any => {
-//   // Placeholder function to filter out sensitive or unnecessary data
-//   // In practice, you'd filter or modify the data as needed before sending it to analytics platforms
-//   return data;
-// };
 var isNotNullOrUndefined = function (value) {
     return (value !== "null" &&
         value !== "undefined" &&

@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "event management package",
   "main": "index.js",
-
   "scripts": {
     "test": "npm run test"
   },
@@ -21,6 +20,7 @@
   },
   "homepage": "https://github.com/HarshadaRaundal/track-event-analytics#readme",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "firebase": "^10.13.2",
     "react": "^18.3.1",
     "react-device-detect": "^2.2.3",
