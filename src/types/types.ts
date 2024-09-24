@@ -109,15 +109,6 @@ export interface IAnalyticsEventIds {
   [key: string]: any;
 }
 
-export interface IDeviceInfo {
-  screenHeight: string;
-  screenWidth: string;
-  browserName: string;
-  osName: string;
-  osVersion: string;
-  deviceModel: string;
-}
-
 export interface IEventAttributesSliceProps {
   deviceInfo: IDeviceInfo;
   previousPage: string;

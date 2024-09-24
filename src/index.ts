@@ -15,22 +15,7 @@ import {
   plateformAnalytics,
 } from "./utils/helper";
 
-// function getLocalStorageItem(key: string) {
-//   if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
-//     return localStorage.getItem(key);
-//   }
-//   // Return null if localStorage is not available (for Node.js or other non-browser environments)
-//   return null;
-// }
-
 const {
-  ACCESS_TOKEN,
-  REFRESH_TOKEN,
-  CAMPAIGN_TASK,
-  CURRENT_CAMPAIGN_TASK_TYPE,
-  SOCIAL_CONNECT_TASK_MODAL,
-  SOCIAL_FLOW,
-  SOCIAL_CONNECT_FROM,
   ANALYTIC_SESSION_ID,
   DEVICE_INFO,
   EVENT_TIMESTAMP,
@@ -40,11 +25,6 @@ const {
   IP_ADDRESS,
   USER_LOCATION_DATA,
   AIRDROP_SESSION_TABS,
-  AIRDROP_SESSION_TAB_IDENTIFIER,
-  AUTH_INITIALIZED_FROM_URL,
-  IS_NEW_USER,
-  CCP_MODAL_DATA,
-  CLAN_PAGE_FOR_REGISTRATION,
 } = STORAGE_KEYS;
 
 export const trackAnalytics = (
@@ -53,15 +33,12 @@ export const trackAnalytics = (
 ) => {
   console.log("eventName", eventName);
 
-  // const userId = getLocalStorageItem(USER_ID) || null;
-  // const loginSessionId = getLocalStorageItem(LOGIN_SESSION_ID);
   const isEndEventTrigger = getLocalStorageItem(IS_SESSION_END_TRIGGERED);
 
   console.log("isEndEventTrigger", isEndEventTrigger);
 
   const userId = getLocalStorageItem(USER_ID);
   const loginSessionId = getLocalStorageItem(LOGIN_SESSION_ID);
-  // const isEndEventTrigger = "oiuytrewe456789";
 
   if (isSessionEnd() && isEndEventTrigger === null) {
     console.log("isSessionEnd()");
@@ -99,7 +76,7 @@ export const trackAnalytics = (
     if (Object.keys(filteredAnalyticsData).length > 0) {
       console.log("Active session eventName >>>>", eventName);
 
-      // setLocalStorage("EVENT_TIMESTAMP", Date.now()?.toString());
+      setLocalStorage(EVENT_TIMESTAMP, Date.now()?.toString());
       const sessionId = analyticSessionId;
 
       // Track the event using Firebase Analytics and platform-specific analytics

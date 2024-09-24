@@ -15,16 +15,8 @@ import {
 import { readCookie } from "./data";
 import { getAnalytics, logEvent } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
-// import { firebaseAnalytics } from "./firebaseAnalytics";
 
 const {
-  ACCESS_TOKEN,
-  REFRESH_TOKEN,
-  CAMPAIGN_TASK,
-  CURRENT_CAMPAIGN_TASK_TYPE,
-  SOCIAL_CONNECT_TASK_MODAL,
-  SOCIAL_FLOW,
-  SOCIAL_CONNECT_FROM,
   ANALYTIC_SESSION_ID,
   DEVICE_INFO,
   EVENT_TIMESTAMP,
@@ -33,12 +25,6 @@ const {
   USER_ID,
   IP_ADDRESS,
   USER_LOCATION_DATA,
-  AIRDROP_SESSION_TABS,
-  AIRDROP_SESSION_TAB_IDENTIFIER,
-  AUTH_INITIALIZED_FROM_URL,
-  IS_NEW_USER,
-  CCP_MODAL_DATA,
-  CLAN_PAGE_FOR_REGISTRATION,
 } = STORAGE_KEYS;
 
 export let deviceInfoRef = {} as IDeviceInfo;
@@ -127,24 +113,6 @@ export const triggerSessionEndEvent = () => {
   // Cancel the timer to prevent further execution
   clearTimeout(inactivityTimer);
 };
-
-// Utility to start a new analytic session
-// export const startNewAnalyticSession = (
-//   eventName: string,
-//   eventData: any, // Replace with a proper type if you have one
-//   isEndEventTrigger: string | null
-// ): void => {
-//   console.log(`Starting new analytic session with event: ${eventName}`);
-//   console.log("Session Data:", eventData);
-
-//   //   const airdrop_analyticSessionId = encodeURIComponent(uuid4());
-//   //   console.log(airdrop_analyticSessionId);
-//   //   setLocalStorage("ANALYTIC_SESSION_ID", airdrop_analyticSessionId);
-
-//   // Placeholder logic for starting a new session
-//   // You might want to store new session info in localStorage or another place
-
-// };
 
 export const addMinutesToEpoch = (
   epochTimestamp: number,
@@ -348,16 +316,6 @@ export const gamerPlateformAnalytics = async (
   }
 };
 
-// function generateRandomId(length = 16) {
-//   const characters =
-//     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-//   let id = "";
-//   for (let i = 0; i < length; i++) {
-//     id += characters.charAt(Math.floor(Math.random() * characters.length));
-//   }
-//   return id;
-// }
-
 const generateRandomId = (): string => {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (char) => {
     const random = (Math.random() * 16) | 0;
@@ -383,10 +341,7 @@ export const startNewAnalyticSession = (
   const getUserLocation = getLocalStorageItem(USER_LOCATION_DATA);
   const domainName = "KGeN";
 
-  // TODO: location data can't be read from hook,
-  // need to find another way instead of exporting
   let userLocation: any = locationData;
-  //   let deviceInfo: IDeviceInfo = deviceInfoRef;
 
   if (getDeviceInfo !== null) {
     deviceInfo = JSON.parse(getDeviceInfo);
@@ -394,9 +349,6 @@ export const startNewAnalyticSession = (
   if (getUserLocation !== null) {
     userLocation = JSON.parse(getUserLocation);
   }
-
-  console.log("getDeviceInfo >>>", getDeviceInfo); //For Reference
-  console.log("getUserLocation >>>", getUserLocation); //For Reference
 
   const countryCode = userLocation?.countryCode;
 
@@ -469,14 +421,6 @@ export const startNewAnalyticSession = (
     console.error("Analytics data is empty.");
   }
 };
-
-// Utility to filter analytics data before sending it to an analytics platform
-
-// export const filteredAttributes = (data: any): any => {
-//   // Placeholder function to filter out sensitive or unnecessary data
-//   // In practice, you'd filter or modify the data as needed before sending it to analytics platforms
-//   return data;
-// };
 
 const isNotNullOrUndefined = (value: string | null | undefined): boolean => {
   return (
