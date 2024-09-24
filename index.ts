@@ -3,15 +3,16 @@
 import { trackAnalytics } from "./src";
 
 export default function currencyConverter(a: any, b: any) {
-  return a + b;
+  trackAnalytics(a, b);
+  return;
 }
 // console.log("ertyuiop-->3");
 
-trackAnalytics("EventName", {});
+// trackAnalytics("poiuytre_oiuytre", {});
 
 // console.log("ertyuiop-->1");
 
-// const result = currencyConverter(10, 20);
+// const result = currencyConverter(1, 20);
 // console.log("Currency Converter Result:", result);
 
 // console.log("ertyuiop-->2");

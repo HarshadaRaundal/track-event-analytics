@@ -47,6 +47,7 @@ export interface AnalyticEventData {
   bonusType?: string;
   bonusCurrency?: string;
   bonusAmount?: string;
+  analyticSessionId?: string | null;
 }
 
 export interface IAnalyticEventAttributes {
@@ -62,7 +63,7 @@ export interface IAnalyticEventAttributes {
   email?: string;
   eventId?: string;
   campaignId?: string;
-  taskId?: string;
+  taskId?: string | null;
   social?: string;
   campaignState?: string;
   failureReason?: string;
@@ -103,4 +104,26 @@ export interface IDeviceInfo {
   osName: string;
   osVersion: string;
   deviceModel: string;
+}
+export interface IAnalyticsEventIds {
+  [key: string]: any;
+}
+
+export interface IDeviceInfo {
+  screenHeight: string;
+  screenWidth: string;
+  browserName: string;
+  osName: string;
+  osVersion: string;
+  deviceModel: string;
+}
+
+export interface IEventAttributesSliceProps {
+  deviceInfo: IDeviceInfo;
+  previousPage: string;
+  ipAddress?: string;
+}
+
+export interface AnalyticsEventObject {
+  [key: string]: any;
 }

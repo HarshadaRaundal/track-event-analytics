@@ -1,4 +1,5 @@
 // analytics.ts
+import { SESSION_EVENTS, STORAGE_KEYS } from "./constant/const";
 import { AnalyticEventData } from "./types/types";
 import {
   // getLocalStorageItem,
@@ -10,44 +11,65 @@ import {
   gamerPlateformAnalytics,
   resetInactivityTimer,
   setLocalStorage,
+  getLocalStorageItem,
+  plateformAnalytics,
 } from "./utils/helper";
 
-function getLocalStorageItem(key: string) {
-  if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
-    return localStorage.getItem(key);
-  }
-  // Return null if localStorage is not available (for Node.js or other non-browser environments)
-  return null;
-}
+// function getLocalStorageItem(key: string) {
+//   if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
+//     return localStorage.getItem(key);
+//   }
+//   // Return null if localStorage is not available (for Node.js or other non-browser environments)
+//   return null;
+// }
 
-const USER_ID = "userId";
-const LOGIN_SESSION_ID = "loginSessionId";
-const IS_SESSION_END_TRIGGERED = "isSessionEndTriggered";
-const ANALYTIC_SESSION_ID = "analyticSessionId";
-const WEBSITE = "website";
-const SESSION_EVENTS = { ANALYTIC_SESSION_START: "analyticSessionStart" };
-const EVENT_TIMESTAMP = "eventTimestamp";
+const {
+  ACCESS_TOKEN,
+  REFRESH_TOKEN,
+  CAMPAIGN_TASK,
+  CURRENT_CAMPAIGN_TASK_TYPE,
+  SOCIAL_CONNECT_TASK_MODAL,
+  SOCIAL_FLOW,
+  SOCIAL_CONNECT_FROM,
+  ANALYTIC_SESSION_ID,
+  DEVICE_INFO,
+  EVENT_TIMESTAMP,
+  IS_SESSION_END_TRIGGERED,
+  LOGIN_SESSION_ID,
+  USER_ID,
+  IP_ADDRESS,
+  USER_LOCATION_DATA,
+  AIRDROP_SESSION_TABS,
+  AIRDROP_SESSION_TAB_IDENTIFIER,
+  AUTH_INITIALIZED_FROM_URL,
+  IS_NEW_USER,
+  CCP_MODAL_DATA,
+  CLAN_PAGE_FOR_REGISTRATION,
+} = STORAGE_KEYS;
 
 export const trackAnalytics = (
   eventName: string,
   eventAttributes: AnalyticEventData
 ) => {
+  console.log("eventName", eventName);
+
   // const userId = getLocalStorageItem(USER_ID) || null;
   // const loginSessionId = getLocalStorageItem(LOGIN_SESSION_ID);
-  const isEndEventTrigger =
-    getLocalStorageItem(IS_SESSION_END_TRIGGERED) || "true";
+  const isEndEventTrigger = getLocalStorageItem(IS_SESSION_END_TRIGGERED);
 
-  const userId = getLocalStorageItem(USER_ID) || "oiuytre";
-  const loginSessionId = getLocalStorageItem(LOGIN_SESSION_ID) || "oiuytr23";
+  console.log("isEndEventTrigger", isEndEventTrigger);
+
+  const userId = getLocalStorageItem(USER_ID);
+  const loginSessionId = getLocalStorageItem(LOGIN_SESSION_ID);
   // const isEndEventTrigger = "oiuytrewe456789";
 
   if (isSessionEnd() && isEndEventTrigger === null) {
+    console.log("isSessionEnd()");
+
     triggerSessionEndEvent();
   }
 
-  const analyticSessionId = getLocalStorageItem(ANALYTIC_SESSION_ID) || "true";
-  const loginId = loginSessionId; // Data for reference
-  const userRefId = userId; // Data for reference
+  const analyticSessionId = getLocalStorageItem(ANALYTIC_SESSION_ID);
 
   const { entryPoint } = eventAttributes || ({} as AnalyticEventData);
   const updateEntryPoint = entryPoint === "/" ? "Home_Page" : entryPoint;
@@ -56,9 +78,9 @@ export const trackAnalytics = (
   const filteredAnalyticsData = filteredAttributes({
     userId,
     loginSessionId,
-    channel: WEBSITE,
+    channel: "WEBSITE",
     ...analyticsData,
-    source: WEBSITE,
+    source: "WEBSITE",
     analyticSessionId,
     timestamp: new Date().getTime().toString(),
   });
@@ -77,12 +99,12 @@ export const trackAnalytics = (
     if (Object.keys(filteredAnalyticsData).length > 0) {
       console.log("Active session eventName >>>>", eventName);
 
-      setLocalStorage(EVENT_TIMESTAMP, Date.now()?.toString());
+      // setLocalStorage("EVENT_TIMESTAMP", Date.now()?.toString());
       const sessionId = analyticSessionId;
 
       // Track the event using Firebase Analytics and platform-specific analytics
       firebaseAnalytics(eventName, filteredAnalyticsData);
-      gamerPlateformAnalytics(eventName, filteredAnalyticsData);
+      plateformAnalytics(eventName, filteredAnalyticsData);
 
       resetInactivityTimer();
 
