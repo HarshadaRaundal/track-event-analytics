@@ -22,7 +22,7 @@
 You can install the package via `npm`:
 
 ```bash
-npm install track-event-analytics
+npm i track-event-analytics
 
 ## Usage
 import trackAnalytics from "track-event-analytics";
