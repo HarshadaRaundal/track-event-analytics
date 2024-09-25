@@ -1,4 +1,5 @@
 "use strict";
+// utils.ts
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -48,8 +49,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetInactivityTimer = exports.filteredAttributes = exports.startNewAnalyticSession = exports.gamerPlateformAnalytics = exports.plateformAnalytics = exports.firebaseAnalytics = exports.getCurrentPlatform = exports.PLATFORMS = exports.isSessionEndTrigger = exports.inactivityTimer = exports.addMinutesToEpoch = exports.triggerSessionEndEvent = exports.isSessionEnd = exports.setLocalStorage = exports.baseURL = exports.isStaging = exports.getLocalStorageItem = exports.sessionId = exports.ipAddressRef = exports.userRefId = exports.loginId = exports.isDesktop = exports.setDeviceInfo = exports.deviceInfoRef = void 0;
-// utils.ts
-// import "dotenv/config";
 var react_device_detect_1 = require("react-device-detect");
 var eventIds_1 = require("./eventIds");
 var const_1 = require("../constant/const");
@@ -139,8 +138,7 @@ var addMinutesToEpoch = function (epochTimestamp, additionTime) {
     return updatedEpochTimestamp;
 };
 exports.addMinutesToEpoch = addMinutesToEpoch;
-// const sessionTimeout = 30 * 60 * 1000; // 30 minutes in milliseconds
-var sessionTimeout = 10 * 1000; // 30 minutes in milliseconds
+var sessionTimeout = 30 * 60 * 1000; // 30 minutes in milliseconds
 exports.isSessionEndTrigger = false; //  Data for reference
 exports.PLATFORMS = {
     GAMER: "gamer",
@@ -168,7 +166,6 @@ var firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "",
 };
-console.log("projectid-->2", process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID);
 var firebaseAnalytics = function (eventName, analyticsObject) {
     var eventId = exports.isStaging
         ? eventIds_1.STAGING_EVENTS_NAME[eventName]
@@ -322,7 +319,6 @@ var generateRandomId = function () {
     });
 };
 var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger, locationData) {
-    console.log("startNewAnalyticSession analyticsData", analyticsData);
     var analyticSessionId = encodeURIComponent(generateRandomId());
     localStorage.setItem("analyticSessionId", analyticSessionId);
     var userId = (0, exports.getLocalStorageItem)(USER_ID);
@@ -406,15 +402,10 @@ var filteredAttributes = function (commonAnalytics) {
     return filteredAnalyticsData;
 };
 exports.filteredAttributes = filteredAttributes;
-// const startInactivityTimer = (time?: number) => {
-//   inactivityTimer = setTimeout(() => {
-//     triggerSessionEndEvent();
-//   }, time || 30 * 60 * 1000); // 30 minutes in milliseconds
-// };
 var startInactivityTimer = function (time) {
     exports.inactivityTimer = setTimeout(function () {
         (0, exports.triggerSessionEndEvent)();
-    }, time || 10 * 1000); // 30 minutes in milliseconds
+    }, time || 30 * 60 * 1000); // 30 minutes in milliseconds
 };
 // Utility to reset the inactivity timer
 var resetInactivityTimer = function (time) {

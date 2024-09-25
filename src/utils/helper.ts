@@ -122,8 +122,7 @@ export const addMinutesToEpoch = (
   return updatedEpochTimestamp;
 };
 
-// const sessionTimeout = 30 * 60 * 1000; // 30 minutes in milliseconds
-const sessionTimeout = 10 * 1000; // 30 minutes in milliseconds
+const sessionTimeout = 30 * 60 * 1000; // 30 minutes in milliseconds
 export let inactivityTimer: NodeJS.Timeout | undefined;
 export let isSessionEndTrigger: boolean = false; //  Data for reference
 
@@ -447,16 +446,12 @@ export const filteredAttributes = (
   return filteredAnalyticsData;
 };
 
-// const startInactivityTimer = (time?: number) => {
-//   inactivityTimer = setTimeout(() => {
-//     triggerSessionEndEvent();
-//   }, time || 30 * 60 * 1000); // 30 minutes in milliseconds
-// };
 const startInactivityTimer = (time?: number) => {
   inactivityTimer = setTimeout(() => {
     triggerSessionEndEvent();
-  }, time || 10 * 1000); // 30 minutes in milliseconds
+  }, time || 30 * 60 * 1000); // 30 minutes in milliseconds
 };
+
 // Utility to reset the inactivity timer
 export const resetInactivityTimer = (time?: number) => {
   clearTimeout(inactivityTimer);
