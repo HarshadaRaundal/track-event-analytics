@@ -331,8 +331,6 @@ export const startNewAnalyticSession = (
   isEndEventTrigger: string | null,
   locationData?: any
 ) => {
-  console.log("startNewAnalyticSession analyticsData", analyticsData);
-
   const analyticSessionId = encodeURIComponent(generateRandomId());
   localStorage.setItem("analyticSessionId", analyticSessionId);
   const userId = getLocalStorageItem(USER_ID);

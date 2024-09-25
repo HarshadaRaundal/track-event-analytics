@@ -31,18 +31,12 @@ export const trackAnalytics = (
   eventName: string,
   eventAttributes: AnalyticEventData
 ) => {
-  console.log("eventName", eventName);
-
   const isEndEventTrigger = getLocalStorageItem(IS_SESSION_END_TRIGGERED);
-
-  console.log("isEndEventTrigger", isEndEventTrigger);
 
   const userId = getLocalStorageItem(USER_ID);
   const loginSessionId = getLocalStorageItem(LOGIN_SESSION_ID);
 
   if (isSessionEnd() && isEndEventTrigger === null) {
-    console.log("isSessionEnd()");
-
     triggerSessionEndEvent();
   }
 
