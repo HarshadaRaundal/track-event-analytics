@@ -1,4 +1,5 @@
 "use strict";
+var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = analyticsConverter;
 const UAParser = require("ua-parser-js");
@@ -9,8 +10,13 @@ const uaResult = parser.getResult();
 const browserName = uaResult.browser.name || "Unknown";
 const osName = uaResult.os.name || "Unknown";
 const osVersion = uaResult.os.version || "Unknown";
-const screenHeight = window.screen.height;
-const screenWidth = window.screen.width;
+let screenHeight;
+let screenWidth;
+if (typeof window !== "undefined") {
+    // This block only runs if window is available, i.e., in the browser
+    screenHeight = (_a = window === null || window === void 0 ? void 0 : window.screen) === null || _a === void 0 ? void 0 : _a.height;
+    screenWidth = (_b = window === null || window === void 0 ? void 0 : window.screen) === null || _b === void 0 ? void 0 : _b.width;
+}
 let deviceModel = uaResult.device.model;
 function analyticsConverter(a, b) {
     if (a === "first_page_load" || b === "Login_session_start") {

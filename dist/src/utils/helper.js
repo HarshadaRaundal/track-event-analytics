@@ -246,6 +246,7 @@ const generateRandomId = () => {
     });
 };
 const startNewAnalyticSession = (event, analyticsData, isEndEventTrigger, locationData) => {
+    var _a, _b;
     const analyticSessionId = encodeURIComponent(generateRandomId());
     localStorage.setItem("analyticSessionId", analyticSessionId);
     const userId = (0, exports.getLocalStorageItem)(USER_ID);
@@ -259,8 +260,13 @@ const startNewAnalyticSession = (event, analyticsData, isEndEventTrigger, locati
     const browserName = uaResult.browser.name || "Unknown";
     const osName = uaResult.os.name || "Unknown";
     const osVersion = uaResult.os.version || "Unknown";
-    const screenHeight = window.screen.height;
-    const screenWidth = window.screen.width;
+    let screenHeight;
+    let screenWidth;
+    if (typeof window !== "undefined") {
+        // This block only runs if window is available, i.e., in the browser
+        screenHeight = (_a = window === null || window === void 0 ? void 0 : window.screen) === null || _a === void 0 ? void 0 : _a.height;
+        screenWidth = (_b = window === null || window === void 0 ? void 0 : window.screen) === null || _b === void 0 ? void 0 : _b.width;
+    }
     // Extract device model
     let deviceModel = uaResult.device.model;
     let userLocation = locationData;

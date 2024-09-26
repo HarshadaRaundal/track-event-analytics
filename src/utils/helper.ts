@@ -345,8 +345,13 @@ export const startNewAnalyticSession = (
   const browserName: string = uaResult.browser.name || "Unknown";
   const osName: string = uaResult.os.name || "Unknown";
   const osVersion: string = uaResult.os.version || "Unknown";
-  const screenHeight: number = window.screen.height;
-  const screenWidth: number = window.screen.width;
+  let screenHeight: number | undefined;
+  let screenWidth: number | undefined;
+  if (typeof window !== "undefined") {
+    // This block only runs if window is available, i.e., in the browser
+    screenHeight = window?.screen?.height;
+    screenWidth = window?.screen?.width;
+  }
 
   // Extract device model
   let deviceModel = uaResult.device.model;
