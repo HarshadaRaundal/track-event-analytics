@@ -2,9 +2,14 @@
   "name": "track-event-analytics",
   "version": "1.0.0",
   "description": "event management package",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
-    "test": "npm run test"
+    "build": "tsc",  
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -23,13 +28,16 @@
     "dotenv": "^16.4.5",
     "firebase": "^10.13.2",
     "react": "^18.3.1",
+    "react-device": "^0.8.1",
     "react-device-detect": "^2.2.3",
     "ts-node": "^10.9.2",
+    "ua-parser-js": "^1.0.39",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.8",
     "@types/react-dom": "^18.3.0",
+    "@types/ua-parser-js": "^0.7.39",
     "@types/uuid": "^10.0.0"
   }
 }

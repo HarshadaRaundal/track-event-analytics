@@ -23,14 +23,20 @@ You can install the package via `npm`:
 
 ```bash
 npm install track-event-analytics
+````
 
 ## Usage
+
+```bash
+
 import trackAnalytics from "track-event-analytics";
 
 trackAnalytics("CLICK_CONTINUEWITHGOOGLE", {
       userid: "oiuytre",
       number: "676",
     });
+```
+
 
 ##Environmental Variables
 This package requires the following environment variables to be set in a .env file:

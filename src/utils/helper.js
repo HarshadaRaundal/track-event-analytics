@@ -55,6 +55,7 @@ var const_1 = require("../constant/const");
 var data_1 = require("./data");
 var analytics_1 = require("firebase/analytics");
 var app_1 = require("firebase/app");
+var UAParser = require("ua-parser-js");
 var ANALYTIC_SESSION_ID = const_1.STORAGE_KEYS.ANALYTIC_SESSION_ID, DEVICE_INFO = const_1.STORAGE_KEYS.DEVICE_INFO, EVENT_TIMESTAMP = const_1.STORAGE_KEYS.EVENT_TIMESTAMP, IS_SESSION_END_TRIGGERED = const_1.STORAGE_KEYS.IS_SESSION_END_TRIGGERED, LOGIN_SESSION_ID = const_1.STORAGE_KEYS.LOGIN_SESSION_ID, USER_ID = const_1.STORAGE_KEYS.USER_ID, IP_ADDRESS = const_1.STORAGE_KEYS.IP_ADDRESS, USER_LOCATION_DATA = const_1.STORAGE_KEYS.USER_LOCATION_DATA;
 exports.deviceInfoRef = {};
 var setDeviceInfo = function (data) {
@@ -77,8 +78,8 @@ var getLocalStorageItem = function (key) {
     }
 };
 exports.getLocalStorageItem = getLocalStorageItem;
-exports.isStaging = process.env.ENVIRONMENT === "Staging";
-exports.baseURL = "https://m8vkl3e1b4.execute-api.eu-west-1.amazonaws.com/dev";
+exports.isStaging = process.env.NEXT_PUBLIC_ENVIRONMENT === "Staging";
+exports.baseURL = process.env.NEXT_PUBLIC_BASE_URL_TRACKER;
 // Utility to set an item in localStorage by key
 var setLocalStorage = function (key, value) {
     try {
@@ -113,6 +114,7 @@ var generateAnalyticsObject = function () {
         loginSessionId: loginSessionId,
         analyticSessionId: analyticSessionId,
         timestamp: new Date().getTime().toString(),
+        channel: "website",
     };
     return analyticObject;
 };
@@ -231,7 +233,7 @@ var gamerPlateformAnalytics = function (eventName, analyticsObject) { return __a
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                baseURL = process.env.BASE_URL_TRACKER;
+                baseURL = process.env.NEXT_PUBLIC_BASE_URL_TRACKER;
                 gameAccountId = process.env.GAME_ACCOUNT_ID;
                 platformGameId = process.env.GAME_ID;
                 isStaging = process.env.ENVIRONMENT === "Staging";
@@ -327,6 +329,15 @@ var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger,
     var getDeviceInfo = (0, exports.getLocalStorageItem)(DEVICE_INFO);
     var getUserLocation = (0, exports.getLocalStorageItem)(USER_LOCATION_DATA);
     var domainName = "KGeN";
+    var parser = new UAParser();
+    var uaResult = parser.getResult();
+    var browserName = uaResult.browser.name || "Unknown";
+    var osName = uaResult.os.name || "Unknown";
+    var osVersion = uaResult.os.version || "Unknown";
+    var screenHeight = window.screen.height;
+    var screenWidth = window.screen.width;
+    // Extract device model
+    var deviceModel = uaResult.device.model;
     var userLocation = locationData;
     if (getDeviceInfo !== null) {
         deviceInfo = JSON.parse(getDeviceInfo);
@@ -340,7 +351,6 @@ var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger,
         : countryCode === "+55"
             ? "Brazil"
             : "Others";
-    var _a = deviceInfo || {}, screenHeight = _a.screenHeight, screenWidth = _a.screenWidth, browserName = _a.browserName, osName = _a.osName, osVersion = _a.osVersion, deviceModel = _a.deviceModel;
     var device = react_device_detect_1.isMobile ? "Mobile" : (0, exports.isDesktop)() ? "DeskTop" : "Others";
     var platform = (0, exports.getCurrentPlatform)();
     var sessionAttributes = {
@@ -350,7 +360,7 @@ var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger,
         domainName: domainName,
         loginSessionId: loginSessionId,
         analyticSessionId: analyticSessionId,
-        channel: "WEBSITE",
+        channel: "website",
         timestamp: Date.now().toString(),
         // Device Info
         device: device,
@@ -360,7 +370,6 @@ var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger,
         browserName: browserName,
         screenHeight: screenHeight === null || screenHeight === void 0 ? void 0 : screenHeight.toString(),
         screenWidth: screenWidth === null || screenWidth === void 0 ? void 0 : screenWidth.toString(),
-        source: "WEBSITE",
     };
     var filteredSessionAttribute = (0, exports.filteredAttributes)(sessionAttributes);
     if (isEndEventTrigger === "true") {

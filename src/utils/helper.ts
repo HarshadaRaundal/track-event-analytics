@@ -15,6 +15,7 @@ import {
 import { readCookie } from "./data";
 import { getAnalytics, logEvent } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
+import UAParser = require("ua-parser-js");
 
 const {
   ANALYTIC_SESSION_ID,
@@ -55,9 +56,8 @@ export const getLocalStorageItem = (key: string): string | null => {
   }
 };
 
-export const isStaging = process.env.ENVIRONMENT === "Staging";
-export const baseURL =
-  "https://m8vkl3e1b4.execute-api.eu-west-1.amazonaws.com/dev";
+export const isStaging = process.env.NEXT_PUBLIC_ENVIRONMENT === "Staging";
+export const baseURL = process.env.NEXT_PUBLIC_BASE_URL_TRACKER;
 
 // Utility to set an item in localStorage by key
 export const setLocalStorage = (key: string, value: string): void => {
@@ -92,6 +92,7 @@ const generateAnalyticsObject = (): IAnalyticEventAttributes => {
     loginSessionId,
     analyticSessionId,
     timestamp: new Date().getTime().toString(),
+    channel: "website",
   };
 
   return analyticObject;
@@ -227,7 +228,7 @@ export const gamerPlateformAnalytics = async (
   eventName: string,
   analyticsObject: AnalyticEventData
 ) => {
-  const baseURL = process.env.BASE_URL_TRACKER;
+  const baseURL = process.env.NEXT_PUBLIC_BASE_URL_TRACKER;
   const gameAccountId = process.env.GAME_ACCOUNT_ID;
   const platformGameId = process.env.GAME_ID;
   const isStaging = process.env.ENVIRONMENT === "Staging";
@@ -339,6 +340,17 @@ export const startNewAnalyticSession = (
   const getUserLocation = getLocalStorageItem(USER_LOCATION_DATA);
   const domainName = "KGeN";
 
+  const parser = new UAParser();
+  const uaResult = parser.getResult();
+  const browserName: string = uaResult.browser.name || "Unknown";
+  const osName: string = uaResult.os.name || "Unknown";
+  const osVersion: string = uaResult.os.version || "Unknown";
+  const screenHeight: number = window.screen.height;
+  const screenWidth: number = window.screen.width;
+
+  // Extract device model
+  let deviceModel = uaResult.device.model;
+
   let userLocation: any = locationData;
 
   if (getDeviceInfo !== null) {
@@ -357,15 +369,6 @@ export const startNewAnalyticSession = (
       ? "Brazil"
       : "Others";
 
-  const {
-    screenHeight,
-    screenWidth,
-    browserName,
-    osName,
-    osVersion,
-    deviceModel,
-  } = deviceInfo || ({} as IDeviceInfo);
-
   const device = isMobile ? "Mobile" : isDesktop() ? "DeskTop" : "Others";
   const platform = getCurrentPlatform();
 
@@ -376,7 +379,7 @@ export const startNewAnalyticSession = (
     domainName,
     loginSessionId,
     analyticSessionId,
-    channel: "WEBSITE",
+    channel: "website",
     timestamp: Date.now().toString(),
     // Device Info
     device,
@@ -386,7 +389,6 @@ export const startNewAnalyticSession = (
     browserName,
     screenHeight: screenHeight?.toString(),
     screenWidth: screenWidth?.toString(),
-    source: "WEBSITE",
   };
 
   const filteredSessionAttribute = filteredAttributes(sessionAttributes);

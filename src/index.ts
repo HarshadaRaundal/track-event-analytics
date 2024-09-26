@@ -1,6 +1,7 @@
 // analytics.ts
 import { SESSION_EVENTS, STORAGE_KEYS } from "./constant/const";
 import { AnalyticEventData } from "./types/types";
+
 import {
   // getLocalStorageItem,
   triggerSessionEndEvent,
@@ -51,7 +52,6 @@ export const trackAnalytics = (
     loginSessionId,
     channel: "WEBSITE",
     ...analyticsData,
-    source: "WEBSITE",
     analyticSessionId,
     timestamp: new Date().getTime().toString(),
   });
