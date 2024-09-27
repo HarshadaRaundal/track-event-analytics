@@ -166,6 +166,7 @@ export const firebaseAnalytics = (
   eventName: string,
   analyticsObject: IAnalyticEventAttributes
 ) => {
+  const isStaging = process.env.NEXT_PUBLIC_ENVIRONMENT === "Staging";
   const eventId = isStaging
     ? STAGING_EVENTS_NAME[eventName]
     : PRODUCTION_EVENTS_NAME[eventName];
@@ -189,6 +190,8 @@ export const plateformAnalytics = async (
   eventName: string,
   analyticsObject: IAnalyticEventAttributes
 ) => {
+  const isStaging = process.env.NEXT_PUBLIC_ENVIRONMENT === "Staging";
+
   const eventId = isStaging
     ? STAGING_EVENTS_NAME[eventName]
     : PRODUCTION_EVENTS_NAME[eventName];
@@ -231,7 +234,7 @@ export const gamerPlateformAnalytics = async (
   const baseURL = process.env.NEXT_PUBLIC_BASE_URL_TRACKER;
   const gameAccountId = process.env.GAME_ACCOUNT_ID;
   const platformGameId = process.env.GAME_ID;
-  const isStaging = process.env.ENVIRONMENT === "Staging";
+  const isStaging = process.env.NEXT_PUBLIC_ENVIRONMENT === "Staging";
   const eventId = isStaging
     ? STAGING_EVENTS_NAME[eventName]
     : PRODUCTION_EVENTS_NAME[eventName];

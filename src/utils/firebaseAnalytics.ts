@@ -381,6 +381,15 @@ export const eventNamesProduction: AnalyticsEventObject = {
   overlay_twitter_reconnect: "9d82cef1-c230-4625-93d3-2f162833388d",
   overlay_twitter_recoonect_cross_button_click:
     "59b54e7e-541c-4550-ba93-04cc178cd8bb",
+
+  //kgen corporate
+  homepage_corporate: "831c3088-b270-4d77-9fd5-99330c52aa3e",
+  corporate_about_us_clicked: "5cb61414-beaa-432f-b855-51e80a6b1cdb",
+  corporate_build_clicked: "07f84e25-deea-424b-b3b1-dfc9204bae3b",
+  corporate_connect_clicked: "21e58a76-2eb0-4ea2-b197-e34c272cffcf",
+  corporate_play_clicked: "b0209400-676f-42d3-9c50-dd6f7cf7057f",
+  corporate_store_clicked: "369a9dcf-9fc8-4ed8-bf2c-ee64106c1b2a",
+  kdroptab_click: "997b1786-a531-4ac8-824d-690844f58455",
 };
 
 export const eventNamesStaging: AnalyticsEventObject = {
@@ -634,4 +643,13 @@ export const eventNamesStaging: AnalyticsEventObject = {
   overlay_twitter_reconnect: "864bcda2-d2fd-415d-88bc-2806e9fa0d04",
   overlay_twitter_recoonect_cross_button_click:
     "5d2a7ce3-6d82-4725-b465-55639dbcb919",
+
+  //kgen corporate
+  homepage_corporate: "20a9b30d-9092-4a59-bbe3-3e505de7d96b",
+  corporate_about_us_clicked: "ce501d14-d895-44e6-adf2-da21f7035e90",
+  corporate_build_clicked: "26621ef5-02e1-453f-95be-24654341ec00",
+  corporate_connect_clicked: "3a1bdaaa-d20d-459e-b866-ee40cdab8131",
+  corporate_play_clicked: "599308c5-67a2-4c4b-877e-0fe6156581fe",
+  corporate_store_clicked: "26687455-1761-4a59-9fea-a72d70fa394f",
+  kdroptab_click: "bf44dc5a-76d5-4446-8fdd-18eb3430a841",
 };

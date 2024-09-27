@@ -1,6 +1,6 @@
 {
   "name": "track-event-analytics",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "event management package",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

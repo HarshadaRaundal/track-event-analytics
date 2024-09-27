@@ -10,6 +10,7 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = analyticsConverter;
 var UAParser = require("ua-parser-js");
@@ -20,8 +21,13 @@ var uaResult = parser.getResult();
 var browserName = uaResult.browser.name || "Unknown";
 var osName = uaResult.os.name || "Unknown";
 var osVersion = uaResult.os.version || "Unknown";
-var screenHeight = window.screen.height;
-var screenWidth = window.screen.width;
+var screenHeight;
+var screenWidth;
+if (typeof window !== "undefined") {
+    // This block only runs if window is available, i.e., in the browser
+    screenHeight = (_a = window === null || window === void 0 ? void 0 : window.screen) === null || _a === void 0 ? void 0 : _a.height;
+    screenWidth = (_b = window === null || window === void 0 ? void 0 : window.screen) === null || _b === void 0 ? void 0 : _b.width;
+}
 var deviceModel = uaResult.device.model;
 function analyticsConverter(a, b) {
     if (a === "first_page_load" || b === "Login_session_start") {

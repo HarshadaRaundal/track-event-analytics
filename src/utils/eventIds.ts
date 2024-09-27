@@ -241,6 +241,15 @@ export const PRODUCTION_EVENTS_NAME: IAnalyticsEventIds = {
   "click confirm on conversion screen": "7ae16f4a-d1a1-47ae-bc99-df11516f1c97",
   "transaction successful": "db17d1a3-9d36-4e1c-92eb-ae3b12024a09",
   "transaction failed": "b8a5e705-c245-476d-951f-d7d42639ba72",
+
+  //kgen corporate
+  homepage_corporate: "831c3088-b270-4d77-9fd5-99330c52aa3e",
+  corporate_about_us_clicked: "5cb61414-beaa-432f-b855-51e80a6b1cdb",
+  corporate_build_clicked: "07f84e25-deea-424b-b3b1-dfc9204bae3b",
+  corporate_connect_clicked: "21e58a76-2eb0-4ea2-b197-e34c272cffcf",
+  corporate_play_clicked: "b0209400-676f-42d3-9c50-dd6f7cf7057f",
+  corporate_store_clicked: "369a9dcf-9fc8-4ed8-bf2c-ee64106c1b2a",
+  kdroptab_click: "997b1786-a531-4ac8-824d-690844f58455",
 };
 
 export const STAGING_EVENTS_NAME: IAnalyticsEventIds = {
@@ -482,4 +491,13 @@ export const STAGING_EVENTS_NAME: IAnalyticsEventIds = {
   "click confirm on conversion screen": "af9a3382-1455-4f1f-9f2e-27611a8a8a7a",
   "transaction successful": "7c8792b9-2658-438a-bdad-df884a95b236",
   "transaction failed": "5ba00517-cd5e-4fdc-8a57-9d39a0957760",
+
+  //kgen corporate
+  homepage_corporate: "20a9b30d-9092-4a59-bbe3-3e505de7d96b",
+  corporate_about_us_clicked: "ce501d14-d895-44e6-adf2-da21f7035e90",
+  corporate_build_clicked: "26621ef5-02e1-453f-95be-24654341ec00",
+  corporate_connect_clicked: "3a1bdaaa-d20d-459e-b866-ee40cdab8131",
+  corporate_play_clicked: "599308c5-67a2-4c4b-877e-0fe6156581fe",
+  corporate_store_clicked: "26687455-1761-4a59-9fea-a72d70fa394f",
+  kdroptab_click: "bf44dc5a-76d5-4446-8fdd-18eb3430a841",
 };

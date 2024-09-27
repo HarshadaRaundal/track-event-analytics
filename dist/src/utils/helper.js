@@ -247,6 +247,7 @@ const generateRandomId = () => {
 };
 const startNewAnalyticSession = (event, analyticsData, isEndEventTrigger, locationData) => {
     var _a, _b;
+    console.log("eventName", analyticsData);
     const analyticSessionId = encodeURIComponent(generateRandomId());
     localStorage.setItem("analyticSessionId", analyticSessionId);
     const userId = (0, exports.getLocalStorageItem)(USER_ID);

@@ -262,4 +262,11 @@ exports.ANALYTICS_EVENTS = {
         OVERLAY_TWITTER_RECONNECT: "overlay_twitter_reconnect",
         OVERLAY_TWITTER_RECONNECT_CROSS_BUTTON_CLICK: "overlay_twitter_recoonect_cross_button_click",
     },
+    HOMEPAGE_CORPORATE: "homepage_corporate",
+    CORPORATE_ABOUT_US_CLICKED: "corporate_abo,ut_us_clicked",
+    CORPORATE_BUILD_CLICKED: "corporate_build_clicked",
+    CORPORATE_CONNECT_CLICKED: "corporate_connect_clicked",
+    CORPORATE_PLAY_CLICKED: "corporate_play_clicked",
+    CORPORATE_STORE_CLICKED: "corporate_store_clicked",
+    KDROPTAB_CLICK: "kdroptab_click",
 };

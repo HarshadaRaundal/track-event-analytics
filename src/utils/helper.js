@@ -169,7 +169,8 @@ var firebaseConfig = {
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "",
 };
 var firebaseAnalytics = function (eventName, analyticsObject) {
-    var eventId = exports.isStaging
+    var isStaging = process.env.NEXT_PUBLIC_ENVIRONMENT === "Staging";
+    var eventId = isStaging
         ? eventIds_1.STAGING_EVENTS_NAME[eventName]
         : eventIds_1.PRODUCTION_EVENTS_NAME[eventName];
     if (!eventId) {
@@ -183,11 +184,12 @@ var firebaseAnalytics = function (eventName, analyticsObject) {
 };
 exports.firebaseAnalytics = firebaseAnalytics;
 var plateformAnalytics = function (eventName, analyticsObject) { return __awaiter(void 0, void 0, void 0, function () {
-    var eventId, queryParams, filteredParams, url, response, result, error_1;
+    var isStaging, eventId, queryParams, filteredParams, url, response, result, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                eventId = exports.isStaging
+                isStaging = process.env.NEXT_PUBLIC_ENVIRONMENT === "Staging";
+                eventId = isStaging
                     ? eventIds_1.STAGING_EVENTS_NAME[eventName]
                     : eventIds_1.PRODUCTION_EVENTS_NAME[eventName];
                 if (!eventId) {
@@ -236,7 +238,7 @@ var gamerPlateformAnalytics = function (eventName, analyticsObject) { return __a
                 baseURL = process.env.NEXT_PUBLIC_BASE_URL_TRACKER;
                 gameAccountId = process.env.GAME_ACCOUNT_ID;
                 platformGameId = process.env.GAME_ID;
-                isStaging = process.env.ENVIRONMENT === "Staging";
+                isStaging = process.env.NEXT_PUBLIC_ENVIRONMENT === "Staging";
                 eventId = isStaging
                     ? eventIds_1.STAGING_EVENTS_NAME[eventName]
                     : eventIds_1.PRODUCTION_EVENTS_NAME[eventName];
@@ -321,6 +323,8 @@ var generateRandomId = function () {
     });
 };
 var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger, locationData) {
+    var _a, _b;
+    console.log("eventName", analyticsData);
     var analyticSessionId = encodeURIComponent(generateRandomId());
     localStorage.setItem("analyticSessionId", analyticSessionId);
     var userId = (0, exports.getLocalStorageItem)(USER_ID);
@@ -334,8 +338,13 @@ var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger,
     var browserName = uaResult.browser.name || "Unknown";
     var osName = uaResult.os.name || "Unknown";
     var osVersion = uaResult.os.version || "Unknown";
-    var screenHeight = window.screen.height;
-    var screenWidth = window.screen.width;
+    var screenHeight;
+    var screenWidth;
+    if (typeof window !== "undefined") {
+        // This block only runs if window is available, i.e., in the browser
+        screenHeight = (_a = window === null || window === void 0 ? void 0 : window.screen) === null || _a === void 0 ? void 0 : _a.height;
+        screenWidth = (_b = window === null || window === void 0 ? void 0 : window.screen) === null || _b === void 0 ? void 0 : _b.width;
+    }
     // Extract device model
     var deviceModel = uaResult.device.model;
     var userLocation = locationData;
