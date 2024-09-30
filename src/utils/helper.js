@@ -56,7 +56,7 @@ var data_1 = require("./data");
 var analytics_1 = require("firebase/analytics");
 var app_1 = require("firebase/app");
 var UAParser = require("ua-parser-js");
-var ANALYTIC_SESSION_ID = const_1.STORAGE_KEYS.ANALYTIC_SESSION_ID, DEVICE_INFO = const_1.STORAGE_KEYS.DEVICE_INFO, EVENT_TIMESTAMP = const_1.STORAGE_KEYS.EVENT_TIMESTAMP, IS_SESSION_END_TRIGGERED = const_1.STORAGE_KEYS.IS_SESSION_END_TRIGGERED, LOGIN_SESSION_ID = const_1.STORAGE_KEYS.LOGIN_SESSION_ID, USER_ID = const_1.STORAGE_KEYS.USER_ID, IP_ADDRESS = const_1.STORAGE_KEYS.IP_ADDRESS, USER_LOCATION_DATA = const_1.STORAGE_KEYS.USER_LOCATION_DATA;
+var ANALYTIC_SESSION_ID = const_1.STORAGE_KEYS.ANALYTIC_SESSION_ID, DEVICE_INFO = const_1.STORAGE_KEYS.DEVICE_INFO, EVENT_TIMESTAMP = const_1.STORAGE_KEYS.EVENT_TIMESTAMP, IS_SESSION_END_TRIGGERED = const_1.STORAGE_KEYS.IS_SESSION_END_TRIGGERED, LOGIN_SESSION_ID = const_1.STORAGE_KEYS.LOGIN_SESSION_ID, USER_ID = const_1.STORAGE_KEYS.USER_ID, IP_ADDRESS = const_1.STORAGE_KEYS.IP_ADDRESS, USER_LOCATION_DATA = const_1.STORAGE_KEYS.USER_LOCATION_DATA, CHANNEL = const_1.STORAGE_KEYS.CHANNEL;
 exports.deviceInfoRef = {};
 var setDeviceInfo = function (data) {
     exports.deviceInfoRef = data;
@@ -109,12 +109,13 @@ var generateAnalyticsObject = function () {
     var userId = (0, exports.getLocalStorageItem)("userId");
     var loginSessionId = (0, exports.getLocalStorageItem)(LOGIN_SESSION_ID);
     var analyticSessionId = (0, exports.getLocalStorageItem)(ANALYTIC_SESSION_ID);
+    var channel = (0, exports.getLocalStorageItem)(CHANNEL);
     var analyticObject = {
         userId: userId,
         loginSessionId: loginSessionId,
         analyticSessionId: analyticSessionId,
         timestamp: new Date().getTime().toString(),
-        channel: "website",
+        channel: channel,
     };
     return analyticObject;
 };
@@ -324,7 +325,6 @@ var generateRandomId = function () {
 };
 var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger, locationData) {
     var _a, _b;
-    console.log("eventName", analyticsData);
     var analyticSessionId = encodeURIComponent(generateRandomId());
     localStorage.setItem("analyticSessionId", analyticSessionId);
     var userId = (0, exports.getLocalStorageItem)(USER_ID);
@@ -362,6 +362,7 @@ var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger,
             : "Others";
     var device = react_device_detect_1.isMobile ? "Mobile" : (0, exports.isDesktop)() ? "DeskTop" : "Others";
     var platform = (0, exports.getCurrentPlatform)();
+    var channel = (0, exports.getLocalStorageItem)(CHANNEL);
     var sessionAttributes = {
         userId: userId,
         location: location,
@@ -369,7 +370,7 @@ var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger,
         domainName: domainName,
         loginSessionId: loginSessionId,
         analyticSessionId: analyticSessionId,
-        channel: "website",
+        channel: channel,
         timestamp: Date.now().toString(),
         // Device Info
         device: device,

@@ -26,6 +26,7 @@ const {
   USER_ID,
   IP_ADDRESS,
   USER_LOCATION_DATA,
+  CHANNEL,
 } = STORAGE_KEYS;
 
 export let deviceInfoRef = {} as IDeviceInfo;
@@ -87,12 +88,14 @@ const generateAnalyticsObject = (): IAnalyticEventAttributes => {
   const userId = getLocalStorageItem("userId");
   const loginSessionId = getLocalStorageItem(LOGIN_SESSION_ID);
   const analyticSessionId = getLocalStorageItem(ANALYTIC_SESSION_ID);
+  const channel = getLocalStorageItem(CHANNEL);
+
   const analyticObject: IAnalyticEventAttributes = {
     userId,
     loginSessionId,
     analyticSessionId,
     timestamp: new Date().getTime().toString(),
-    channel: "website",
+    channel: channel,
   };
 
   return analyticObject;
@@ -379,6 +382,7 @@ export const startNewAnalyticSession = (
 
   const device = isMobile ? "Mobile" : isDesktop() ? "DeskTop" : "Others";
   const platform = getCurrentPlatform();
+  const channel = getLocalStorageItem(CHANNEL);
 
   const sessionAttributes = {
     userId,
@@ -387,7 +391,7 @@ export const startNewAnalyticSession = (
     domainName,
     loginSessionId,
     analyticSessionId,
-    channel: "website",
+    channel: channel,
     timestamp: Date.now().toString(),
     // Device Info
     device,

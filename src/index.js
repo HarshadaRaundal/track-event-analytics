@@ -15,12 +15,13 @@ exports.trackAnalytics = void 0;
 // analytics.ts
 var const_1 = require("./constant/const");
 var helper_1 = require("./utils/helper");
-var ANALYTIC_SESSION_ID = const_1.STORAGE_KEYS.ANALYTIC_SESSION_ID, DEVICE_INFO = const_1.STORAGE_KEYS.DEVICE_INFO, EVENT_TIMESTAMP = const_1.STORAGE_KEYS.EVENT_TIMESTAMP, IS_SESSION_END_TRIGGERED = const_1.STORAGE_KEYS.IS_SESSION_END_TRIGGERED, LOGIN_SESSION_ID = const_1.STORAGE_KEYS.LOGIN_SESSION_ID, USER_ID = const_1.STORAGE_KEYS.USER_ID, IP_ADDRESS = const_1.STORAGE_KEYS.IP_ADDRESS, USER_LOCATION_DATA = const_1.STORAGE_KEYS.USER_LOCATION_DATA, AIRDROP_SESSION_TABS = const_1.STORAGE_KEYS.AIRDROP_SESSION_TABS;
+var ANALYTIC_SESSION_ID = const_1.STORAGE_KEYS.ANALYTIC_SESSION_ID, DEVICE_INFO = const_1.STORAGE_KEYS.DEVICE_INFO, EVENT_TIMESTAMP = const_1.STORAGE_KEYS.EVENT_TIMESTAMP, IS_SESSION_END_TRIGGERED = const_1.STORAGE_KEYS.IS_SESSION_END_TRIGGERED, LOGIN_SESSION_ID = const_1.STORAGE_KEYS.LOGIN_SESSION_ID, USER_ID = const_1.STORAGE_KEYS.USER_ID, IP_ADDRESS = const_1.STORAGE_KEYS.IP_ADDRESS, USER_LOCATION_DATA = const_1.STORAGE_KEYS.USER_LOCATION_DATA, AIRDROP_SESSION_TABS = const_1.STORAGE_KEYS.AIRDROP_SESSION_TABS, CHANNEL = const_1.STORAGE_KEYS.CHANNEL;
 var trackAnalytics = function (eventName, eventAttributes) {
     var _a;
     var isEndEventTrigger = (0, helper_1.getLocalStorageItem)(IS_SESSION_END_TRIGGERED);
     var userId = (0, helper_1.getLocalStorageItem)(USER_ID);
     var loginSessionId = (0, helper_1.getLocalStorageItem)(LOGIN_SESSION_ID);
+    var channel = (0, helper_1.getLocalStorageItem)(CHANNEL);
     if ((0, helper_1.isSessionEnd)() && isEndEventTrigger === null) {
         (0, helper_1.triggerSessionEndEvent)();
     }
@@ -28,7 +29,7 @@ var trackAnalytics = function (eventName, eventAttributes) {
     var entryPoint = (eventAttributes || {}).entryPoint;
     var updateEntryPoint = entryPoint === "/" ? "Home_Page" : entryPoint;
     var analyticsData = __assign(__assign({}, eventAttributes), { entryPoint: updateEntryPoint });
-    var filteredAnalyticsData = (0, helper_1.filteredAttributes)(__assign(__assign({ userId: userId, loginSessionId: loginSessionId, channel: "WEBSITE" }, analyticsData), { analyticSessionId: analyticSessionId, timestamp: new Date().getTime().toString() }));
+    var filteredAnalyticsData = (0, helper_1.filteredAttributes)(__assign(__assign({ userId: userId, loginSessionId: loginSessionId, channel: channel }, analyticsData), { analyticSessionId: analyticSessionId, timestamp: new Date().getTime().toString() }));
     if (eventName !== const_1.SESSION_EVENTS.ANALYTIC_SESSION_START &&
         ((0, helper_1.isSessionEnd)() || analyticSessionId === null)) {
         console.log("New Session Start with eventName >>>>", eventName);

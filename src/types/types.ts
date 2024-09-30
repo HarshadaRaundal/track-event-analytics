@@ -1,7 +1,7 @@
 export interface AnalyticEventData {
   eventName?: string;
   userId?: string | null;
-  channel?: string;
+  channel?: string | null;
   domainName?: string;
   timestamp?: string;
   ipAddress?: string | null;
@@ -53,7 +53,7 @@ export interface AnalyticEventData {
 export interface IAnalyticEventAttributes {
   eventName?: string;
   userId?: string | null;
-  channel?: string;
+  channel?: string | null;
   domainName?: string;
   timestamp?: string;
   ipAddress?: string | null;

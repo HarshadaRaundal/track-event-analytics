@@ -26,6 +26,7 @@ const {
   IP_ADDRESS,
   USER_LOCATION_DATA,
   AIRDROP_SESSION_TABS,
+  CHANNEL,
 } = STORAGE_KEYS;
 
 export const trackAnalytics = (
@@ -36,6 +37,7 @@ export const trackAnalytics = (
 
   const userId = getLocalStorageItem(USER_ID);
   const loginSessionId = getLocalStorageItem(LOGIN_SESSION_ID);
+  const channel = getLocalStorageItem(CHANNEL);
 
   if (isSessionEnd() && isEndEventTrigger === null) {
     triggerSessionEndEvent();
@@ -50,7 +52,7 @@ export const trackAnalytics = (
   const filteredAnalyticsData = filteredAttributes({
     userId,
     loginSessionId,
-    channel: "WEBSITE",
+    channel: channel,
     ...analyticsData,
     analyticSessionId,
     timestamp: new Date().getTime().toString(),
