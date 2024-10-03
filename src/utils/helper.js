@@ -57,6 +57,7 @@ var analytics_1 = require("firebase/analytics");
 var app_1 = require("firebase/app");
 var UAParser = require("ua-parser-js");
 var ANALYTIC_SESSION_ID = const_1.STORAGE_KEYS.ANALYTIC_SESSION_ID, DEVICE_INFO = const_1.STORAGE_KEYS.DEVICE_INFO, EVENT_TIMESTAMP = const_1.STORAGE_KEYS.EVENT_TIMESTAMP, IS_SESSION_END_TRIGGERED = const_1.STORAGE_KEYS.IS_SESSION_END_TRIGGERED, LOGIN_SESSION_ID = const_1.STORAGE_KEYS.LOGIN_SESSION_ID, USER_ID = const_1.STORAGE_KEYS.USER_ID, IP_ADDRESS = const_1.STORAGE_KEYS.IP_ADDRESS, USER_LOCATION_DATA = const_1.STORAGE_KEYS.USER_LOCATION_DATA, CHANNEL = const_1.STORAGE_KEYS.CHANNEL;
+var UTM_SOURCE = const_1.UTM_PARAMS.UTM_SOURCE, UTM_MEDIUM = const_1.UTM_PARAMS.UTM_MEDIUM, UTM_CAMPAIGN = const_1.UTM_PARAMS.UTM_CAMPAIGN, UTM_ID = const_1.UTM_PARAMS.UTM_ID, UTM_TERM = const_1.UTM_PARAMS.UTM_TERM, UTM_CONTENT = const_1.UTM_PARAMS.UTM_CONTENT;
 exports.deviceInfoRef = {};
 var setDeviceInfo = function (data) {
     exports.deviceInfoRef = data;
@@ -148,6 +149,37 @@ exports.PLATFORMS = {
     AIRDROP: "airdrop",
     UNDEFINED: "",
 };
+function extractUtmURLParams() {
+    var queryString = window.location.search;
+    // If the queryString is empty, return all parameters as null directly
+    if (!queryString) {
+        return {
+            utmSource: null,
+            utmMedium: null,
+            utmCampaign: null,
+            utmId: null,
+            utmTerm: null,
+            utmContent: null,
+        };
+    }
+    var urlParams = new URLSearchParams(queryString);
+    // Explicitly return `null` if the parameter is not present or is an empty string
+    function getParamValue(key) {
+        var value = urlParams.get(key);
+        if (!value || value === "undefined") {
+            return null;
+        }
+        return value;
+    }
+    return {
+        utmSource: getParamValue(UTM_SOURCE),
+        utmMedium: getParamValue(UTM_MEDIUM),
+        utmCampaign: getParamValue(UTM_CAMPAIGN),
+        utmId: getParamValue(UTM_ID),
+        utmTerm: getParamValue(UTM_TERM),
+        utmContent: getParamValue(UTM_CONTENT),
+    };
+}
 var getCurrentPlatform = function () {
     if (typeof window !== "undefined") {
         var url = window.location.href;
@@ -323,6 +355,10 @@ var generateRandomId = function () {
         return value.toString(16);
     });
 };
+var logSessionEvent = function (event, attributes) {
+    (0, exports.firebaseAnalytics)(event, attributes);
+    (0, exports.plateformAnalytics)(event, attributes);
+};
 var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger, locationData) {
     var _a, _b;
     var analyticSessionId = encodeURIComponent(generateRandomId());
@@ -363,6 +399,7 @@ var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger,
     var device = react_device_detect_1.isMobile ? "Mobile" : (0, exports.isDesktop)() ? "DeskTop" : "Others";
     var platform = (0, exports.getCurrentPlatform)();
     var channel = (0, exports.getLocalStorageItem)(CHANNEL);
+    var _c = extractUtmURLParams(), utmSource = _c.utmSource, utmMedium = _c.utmMedium, utmCampaign = _c.utmCampaign, utmId = _c.utmId, utmTerm = _c.utmTerm, utmContent = _c.utmContent;
     var sessionAttributes = {
         userId: userId,
         location: location,
@@ -381,12 +418,22 @@ var startNewAnalyticSession = function (event, analyticsData, isEndEventTrigger,
         screenHeight: screenHeight === null || screenHeight === void 0 ? void 0 : screenHeight.toString(),
         screenWidth: screenWidth === null || screenWidth === void 0 ? void 0 : screenWidth.toString(),
     };
+    var extraAttributes = {
+        utmSource: utmSource,
+        utmMedium: utmMedium,
+        utmCampaign: utmCampaign,
+        utmId: utmId,
+        utmTerm: utmTerm,
+        utmContent: utmContent,
+    };
     var filteredSessionAttribute = (0, exports.filteredAttributes)(sessionAttributes);
+    var mergedAttributes = __assign(__assign({}, filteredSessionAttribute), extraAttributes);
+    var filteredSessionmergedAttributes = (0, exports.filteredAttributes)(mergedAttributes);
     if (isEndEventTrigger === "true") {
         localStorage.removeItem(IS_SESSION_END_TRIGGERED);
     }
-    (0, exports.firebaseAnalytics)(const_1.SESSION_EVENTS.ANALYTIC_SESSION_START, filteredSessionAttribute);
-    (0, exports.plateformAnalytics)(const_1.SESSION_EVENTS.ANALYTIC_SESSION_START, filteredSessionAttribute);
+    logSessionEvent(const_1.SESSION_EVENTS.ANALYTIC_SESSION_START, filteredSessionAttribute);
+    logSessionEvent(const_1.SESSION_EVENTS.FIRST_PAGE_LOAD, filteredSessionmergedAttributes);
     if (Object.keys(analyticsData).length > 0) {
         (0, exports.setLocalStorage)(EVENT_TIMESTAMP, Date.now().toString());
         // Track the event using Firebase Analytics and platform-specific analytics

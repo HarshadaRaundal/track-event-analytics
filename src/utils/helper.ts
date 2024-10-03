@@ -11,6 +11,7 @@ import {
   ANALYTICS_EVENTS,
   SESSION_EVENTS,
   STORAGE_KEYS,
+  UTM_PARAMS,
 } from "../constant/const";
 import { readCookie } from "./data";
 import { getAnalytics, logEvent } from "firebase/analytics";
@@ -28,6 +29,9 @@ const {
   USER_LOCATION_DATA,
   CHANNEL,
 } = STORAGE_KEYS;
+
+const { UTM_SOURCE, UTM_MEDIUM, UTM_CAMPAIGN, UTM_ID, UTM_TERM, UTM_CONTENT } =
+  UTM_PARAMS;
 
 export let deviceInfoRef = {} as IDeviceInfo;
 export const setDeviceInfo = (data: any) => {
@@ -139,6 +143,44 @@ export const PLATFORMS = {
 export type ObjectValues<T> = T[keyof T];
 
 export type PlatformsType = ObjectValues<typeof PLATFORMS>;
+
+function extractUtmURLParams() {
+  const queryString = window.location.search;
+
+  // If the queryString is empty, return all parameters as null directly
+  if (!queryString) {
+    return {
+      utmSource: null,
+      utmMedium: null,
+      utmCampaign: null,
+      utmId: null,
+      utmTerm: null,
+      utmContent: null,
+    };
+  }
+
+  const urlParams = new URLSearchParams(queryString);
+
+  // Explicitly return `null` if the parameter is not present or is an empty string
+  function getParamValue(key: string) {
+    const value = urlParams.get(key);
+
+    if (!value || value === "undefined") {
+      return null;
+    }
+
+    return value;
+  }
+
+  return {
+    utmSource: getParamValue(UTM_SOURCE),
+    utmMedium: getParamValue(UTM_MEDIUM),
+    utmCampaign: getParamValue(UTM_CAMPAIGN),
+    utmId: getParamValue(UTM_ID),
+    utmTerm: getParamValue(UTM_TERM),
+    utmContent: getParamValue(UTM_CONTENT),
+  };
+}
 
 export const getCurrentPlatform = (): PlatformsType => {
   if (typeof window !== "undefined") {
@@ -331,6 +373,14 @@ const generateRandomId = (): string => {
   });
 };
 
+const logSessionEvent = (
+  event: string,
+  attributes: IAnalyticEventAttributes
+) => {
+  firebaseAnalytics(event, attributes);
+  plateformAnalytics(event, attributes);
+};
+
 export const startNewAnalyticSession = (
   event: string,
   analyticsData: AnalyticEventData,
@@ -383,6 +433,8 @@ export const startNewAnalyticSession = (
   const device = isMobile ? "Mobile" : isDesktop() ? "DeskTop" : "Others";
   const platform = getCurrentPlatform();
   const channel = getLocalStorageItem(CHANNEL);
+  const { utmSource, utmMedium, utmCampaign, utmId, utmTerm, utmContent } =
+    extractUtmURLParams();
 
   const sessionAttributes = {
     userId,
@@ -402,21 +454,30 @@ export const startNewAnalyticSession = (
     screenHeight: screenHeight?.toString(),
     screenWidth: screenWidth?.toString(),
   };
+  const extraAttributes = {
+    utmSource,
+    utmMedium,
+    utmCampaign,
+    utmId,
+    utmTerm,
+    utmContent,
+  };
 
   const filteredSessionAttribute = filteredAttributes(sessionAttributes);
+  const mergedAttributes = { ...filteredSessionAttribute, ...extraAttributes };
+  const filteredSessionmergedAttributes = filteredAttributes(mergedAttributes);
 
   if (isEndEventTrigger === "true") {
     localStorage.removeItem(IS_SESSION_END_TRIGGERED);
   }
 
-  firebaseAnalytics(
+  logSessionEvent(
     SESSION_EVENTS.ANALYTIC_SESSION_START,
     filteredSessionAttribute
   );
-
-  plateformAnalytics(
-    SESSION_EVENTS.ANALYTIC_SESSION_START,
-    filteredSessionAttribute
+  logSessionEvent(
+    SESSION_EVENTS.FIRST_PAGE_LOAD,
+    filteredSessionmergedAttributes
   );
 
   if (Object.keys(analyticsData).length > 0) {

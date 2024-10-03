@@ -18,7 +18,8 @@ const data_1 = require("./data");
 const analytics_1 = require("firebase/analytics");
 const app_1 = require("firebase/app");
 const UAParser = require("ua-parser-js");
-const { ANALYTIC_SESSION_ID, DEVICE_INFO, EVENT_TIMESTAMP, IS_SESSION_END_TRIGGERED, LOGIN_SESSION_ID, USER_ID, IP_ADDRESS, USER_LOCATION_DATA, } = const_1.STORAGE_KEYS;
+const { ANALYTIC_SESSION_ID, DEVICE_INFO, EVENT_TIMESTAMP, IS_SESSION_END_TRIGGERED, LOGIN_SESSION_ID, USER_ID, IP_ADDRESS, USER_LOCATION_DATA, CHANNEL, } = const_1.STORAGE_KEYS;
+const { UTM_SOURCE, UTM_MEDIUM, UTM_CAMPAIGN, UTM_ID, UTM_TERM, UTM_CONTENT } = const_1.UTM_PARAMS;
 exports.deviceInfoRef = {};
 const setDeviceInfo = (data) => {
     exports.deviceInfoRef = data;
@@ -71,12 +72,13 @@ const generateAnalyticsObject = () => {
     const userId = (0, exports.getLocalStorageItem)("userId");
     const loginSessionId = (0, exports.getLocalStorageItem)(LOGIN_SESSION_ID);
     const analyticSessionId = (0, exports.getLocalStorageItem)(ANALYTIC_SESSION_ID);
+    const channel = (0, exports.getLocalStorageItem)(CHANNEL);
     const analyticObject = {
         userId,
         loginSessionId,
         analyticSessionId,
         timestamp: new Date().getTime().toString(),
-        channel: "website",
+        channel: channel,
     };
     return analyticObject;
 };
@@ -109,6 +111,37 @@ exports.PLATFORMS = {
     AIRDROP: "airdrop",
     UNDEFINED: "",
 };
+function extractUtmURLParams() {
+    const queryString = window.location.search;
+    // If the queryString is empty, return all parameters as null directly
+    if (!queryString) {
+        return {
+            utmSource: null,
+            utmMedium: null,
+            utmCampaign: null,
+            utmId: null,
+            utmTerm: null,
+            utmContent: null,
+        };
+    }
+    const urlParams = new URLSearchParams(queryString);
+    // Explicitly return `null` if the parameter is not present or is an empty string
+    function getParamValue(key) {
+        const value = urlParams.get(key);
+        if (!value || value === "undefined") {
+            return null;
+        }
+        return value;
+    }
+    return {
+        utmSource: getParamValue(UTM_SOURCE),
+        utmMedium: getParamValue(UTM_MEDIUM),
+        utmCampaign: getParamValue(UTM_CAMPAIGN),
+        utmId: getParamValue(UTM_ID),
+        utmTerm: getParamValue(UTM_TERM),
+        utmContent: getParamValue(UTM_CONTENT),
+    };
+}
 const getCurrentPlatform = () => {
     if (typeof window !== "undefined") {
         const url = window.location.href;
@@ -131,7 +164,8 @@ const firebaseConfig = {
     measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID || "",
 };
 const firebaseAnalytics = (eventName, analyticsObject) => {
-    const eventId = exports.isStaging
+    const isStaging = process.env.NEXT_PUBLIC_ENVIRONMENT === "Staging";
+    const eventId = isStaging
         ? eventIds_1.STAGING_EVENTS_NAME[eventName]
         : eventIds_1.PRODUCTION_EVENTS_NAME[eventName];
     if (!eventId) {
@@ -145,7 +179,8 @@ const firebaseAnalytics = (eventName, analyticsObject) => {
 };
 exports.firebaseAnalytics = firebaseAnalytics;
 const plateformAnalytics = (eventName, analyticsObject) => __awaiter(void 0, void 0, void 0, function* () {
-    const eventId = exports.isStaging
+    const isStaging = process.env.NEXT_PUBLIC_ENVIRONMENT === "Staging";
+    const eventId = isStaging
         ? eventIds_1.STAGING_EVENTS_NAME[eventName]
         : eventIds_1.PRODUCTION_EVENTS_NAME[eventName];
     if (!eventId) {
@@ -175,7 +210,7 @@ const gamerPlateformAnalytics = (eventName, analyticsObject) => __awaiter(void 0
     const baseURL = process.env.NEXT_PUBLIC_BASE_URL_TRACKER;
     const gameAccountId = process.env.GAME_ACCOUNT_ID;
     const platformGameId = process.env.GAME_ID;
-    const isStaging = process.env.ENVIRONMENT === "Staging";
+    const isStaging = process.env.NEXT_PUBLIC_ENVIRONMENT === "Staging";
     const eventId = isStaging
         ? eventIds_1.STAGING_EVENTS_NAME[eventName]
         : eventIds_1.PRODUCTION_EVENTS_NAME[eventName];
@@ -245,9 +280,12 @@ const generateRandomId = () => {
         return value.toString(16);
     });
 };
+const logSessionEvent = (event, attributes) => {
+    (0, exports.firebaseAnalytics)(event, attributes);
+    (0, exports.plateformAnalytics)(event, attributes);
+};
 const startNewAnalyticSession = (event, analyticsData, isEndEventTrigger, locationData) => {
     var _a, _b;
-    console.log("eventName", analyticsData);
     const analyticSessionId = encodeURIComponent(generateRandomId());
     localStorage.setItem("analyticSessionId", analyticSessionId);
     const userId = (0, exports.getLocalStorageItem)(USER_ID);
@@ -285,6 +323,8 @@ const startNewAnalyticSession = (event, analyticsData, isEndEventTrigger, locati
             : "Others";
     const device = react_device_detect_1.isMobile ? "Mobile" : (0, exports.isDesktop)() ? "DeskTop" : "Others";
     const platform = (0, exports.getCurrentPlatform)();
+    const channel = (0, exports.getLocalStorageItem)(CHANNEL);
+    const { utmSource, utmMedium, utmCampaign, utmId, utmTerm, utmContent } = extractUtmURLParams();
     const sessionAttributes = {
         userId,
         location,
@@ -292,7 +332,7 @@ const startNewAnalyticSession = (event, analyticsData, isEndEventTrigger, locati
         domainName,
         loginSessionId,
         analyticSessionId,
-        channel: "website",
+        channel: channel,
         timestamp: Date.now().toString(),
         // Device Info
         device,
@@ -303,12 +343,22 @@ const startNewAnalyticSession = (event, analyticsData, isEndEventTrigger, locati
         screenHeight: screenHeight === null || screenHeight === void 0 ? void 0 : screenHeight.toString(),
         screenWidth: screenWidth === null || screenWidth === void 0 ? void 0 : screenWidth.toString(),
     };
+    const extraAttributes = {
+        utmSource,
+        utmMedium,
+        utmCampaign,
+        utmId,
+        utmTerm,
+        utmContent,
+    };
     const filteredSessionAttribute = (0, exports.filteredAttributes)(sessionAttributes);
+    const mergedAttributes = Object.assign(Object.assign({}, filteredSessionAttribute), extraAttributes);
+    const filteredSessionmergedAttributes = (0, exports.filteredAttributes)(mergedAttributes);
     if (isEndEventTrigger === "true") {
         localStorage.removeItem(IS_SESSION_END_TRIGGERED);
     }
-    (0, exports.firebaseAnalytics)(const_1.SESSION_EVENTS.ANALYTIC_SESSION_START, filteredSessionAttribute);
-    (0, exports.plateformAnalytics)(const_1.SESSION_EVENTS.ANALYTIC_SESSION_START, filteredSessionAttribute);
+    logSessionEvent(const_1.SESSION_EVENTS.ANALYTIC_SESSION_START, filteredSessionAttribute);
+    logSessionEvent(const_1.SESSION_EVENTS.FIRST_PAGE_LOAD, filteredSessionmergedAttributes);
     if (Object.keys(analyticsData).length > 0) {
         (0, exports.setLocalStorage)(EVENT_TIMESTAMP, Date.now().toString());
         // Track the event using Firebase Analytics and platform-specific analytics

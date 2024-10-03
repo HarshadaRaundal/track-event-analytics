@@ -28,6 +28,7 @@ export const SESSION_EVENTS = {
   ANALYTIC_SESSION_END: "analytic_SessionEnd",
   LOGIN_SUCCESSFUL: "Login_session_start",
   LOGIN_SESSION_END: "login_session_end",
+  FIRST_PAGE_LOAD: "first_page_load",
 };
 
 export const ANALYTICS_EVENTS = {
@@ -36,5 +37,15 @@ export const ANALYTICS_EVENTS = {
     ANALYTIC_SESSION_END: "analytic_SessionEnd",
     LOGIN_SUCCESSFUL: "Login_session_start",
     LOGIN_SESSION_END: "login_session_end",
+    FIRST_PAGE_LOAD: "first_page_load",
   },
+};
+
+export const UTM_PARAMS = {
+  UTM_SOURCE: "utm_source",
+  UTM_MEDIUM: "utm_medium",
+  UTM_CAMPAIGN: "utm_campaign",
+  UTM_ID: "utm_id",
+  UTM_TERM: "utm_term",
+  UTM_CONTENT: "utm_content",
 };

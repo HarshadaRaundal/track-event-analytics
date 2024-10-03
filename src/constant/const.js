@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ANALYTICS_EVENTS = exports.SESSION_EVENTS = exports.STORAGE_KEYS = void 0;
+exports.UTM_PARAMS = exports.ANALYTICS_EVENTS = exports.SESSION_EVENTS = exports.STORAGE_KEYS = void 0;
 exports.STORAGE_KEYS = {
     ACCESS_TOKEN: "accessToken",
     REFRESH_TOKEN: "refreshToken",
@@ -30,6 +30,7 @@ exports.SESSION_EVENTS = {
     ANALYTIC_SESSION_END: "analytic_SessionEnd",
     LOGIN_SUCCESSFUL: "Login_session_start",
     LOGIN_SESSION_END: "login_session_end",
+    FIRST_PAGE_LOAD: "first_page_load",
 };
 exports.ANALYTICS_EVENTS = {
     SESSION_EVENTS: {
@@ -37,5 +38,14 @@ exports.ANALYTICS_EVENTS = {
         ANALYTIC_SESSION_END: "analytic_SessionEnd",
         LOGIN_SUCCESSFUL: "Login_session_start",
         LOGIN_SESSION_END: "login_session_end",
+        FIRST_PAGE_LOAD: "first_page_load",
     },
+};
+exports.UTM_PARAMS = {
+    UTM_SOURCE: "utm_source",
+    UTM_MEDIUM: "utm_medium",
+    UTM_CAMPAIGN: "utm_campaign",
+    UTM_ID: "utm_id",
+    UTM_TERM: "utm_term",
+    UTM_CONTENT: "utm_content",
 };
